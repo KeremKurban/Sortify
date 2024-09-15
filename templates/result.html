@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorted Tracks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Your Sorted Tracks</h1>
+    <ol>
+        {% for track in tracks %}
+        <li>
+            <h2>{{ track.name }}</h2>
+            <p>{{ track.artists|join(', ') }}</p>
+        </li>
+        {% endfor %}
+    </ol>
+    <a href="{{ url_for('sort') }}" class="button">Sort Another Album</a>
+</body>
+</html>

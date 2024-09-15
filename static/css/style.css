@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+h1 {
+    color: #1DB954;
+}
+
+.button {
+    display: inline-block;
+    background-color: #1DB954;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+form {
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.song-button {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.song-button:hover {
+    background-color: #e0e0e0;
+}
+
+ol {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-bottom: 5px;
+}
+
+p {
+    margin-top: 0;
+    color: #666;
+}
