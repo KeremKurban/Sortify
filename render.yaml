@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: spotify-playlist-sorter
+    name: sortify
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn run:app
