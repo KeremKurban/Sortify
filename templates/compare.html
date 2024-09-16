@@ -8,16 +8,25 @@
 </head>
 <body>
     <h1>Which song do you prefer?</h1>
+    <img src="{{ album_cover }}" alt="Album Cover" class="album-cover">
     <form action="{{ url_for('compare') }}" method="post">
         <input type="hidden" name="song1_id" value="{{ song1.id }}">
         <input type="hidden" name="song2_id" value="{{ song2.id }}">
         <button type="submit" name="chosen" value="{{ song1.id }}" class="song-button">
             <h2>{{ song1.name }}</h2>
             <p>{{ song1.artists|join(', ') }}</p>
+            <audio controls>
+                <source src="{{ song1.preview_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
         </button>
         <button type="submit" name="chosen" value="{{ song2.id }}" class="song-button">
             <h2>{{ song2.name }}</h2>
             <p>{{ song2.artists|join(', ') }}</p>
+            <audio controls>
+                <source src="{{ song2.preview_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
         </button>
     </form>
 </body>

@@ -32,12 +32,14 @@ def get_tracks_from_spotify(link, sp):
     try:
         if 'album' in link:
             album_id = link.split('/')[-1].split('?')[0]
-            tracks = sp.album_tracks(album_id)
-            return [{'id': track['id'], 'name': track['name'], 'artists': [artist['name'] for artist in track['artists']]} for track in tracks['items']]
+            album = sp.album(album_id)
+            tracks = album['tracks']['items']
+            album_cover = album['images'][0]['url']
+            return [{'id': track['id'], 'name': track['name'], 'artists': [artist['name'] for artist in track['artists']], 'preview_url': track['preview_url'], 'album_cover': album_cover} for track in tracks]
         elif 'playlist' in link:
             playlist_id = link.split('/')[-1].split('?')[0]
-            tracks = sp.playlist_tracks(playlist_id)
-            return [{'id': track['track']['id'], 'name': track['track']['name'], 'artists': [artist['name'] for artist in track['track']['artists']]} for track in tracks['items']]
+            tracks = sp.playlist_tracks(playlist_id)['items']
+            return [{'id': track['track']['id'], 'name': track['track']['name'], 'artists': [artist['name'] for artist in track['track']['artists']], 'preview_url': track['track']['preview_url']} for track in tracks]
         else:
             return []
     except spotipy.exceptions.SpotifyException as e:
