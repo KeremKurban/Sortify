@@ -23,3 +23,5 @@ instance/
 
 # Windows
 Thumbs.db
+
+.cache
