@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, session, url_for, render_template_string
+from flask import render_template, redirect, request, session, url_for, render_template_string, flash
 from app import app
 from app.spotify_api import create_spotify_oauth, get_spotify_client, get_tracks_from_spotify, create_spotify_client  # Import create_spotify_client
 from app.sorting import merge_sort, get_next_comparison
@@ -22,13 +22,20 @@ def callback():
     code = request.args.get('code')
     print(f"Received code: {code}")  # Debug print
     if not code:
-        return "Error: No code provided", 400
-    token_info = sp_oauth.get_access_token(code)
-    print(f"Token info: {token_info}")  # Debug print
-    if not token_info:
-        return "Error: Unable to retrieve token", 400
-    session["token_info"] = token_info
-    return redirect(url_for('sort'))  # Redirect to sort page
+        flash("Error: No code provided", "error")
+        return redirect(url_for('index'))
+    try:
+        token_info = sp_oauth.get_access_token(code)
+        print(f"Token info: {token_info}")  # Debug print
+        if not token_info:
+            flash("Error: Unable to retrieve token", "error")
+            return redirect(url_for('index'))
+        session["token_info"] = token_info
+        return redirect(url_for('sort'))  # Redirect to sort page
+    except Exception as e:
+        print(f"Exception during callback: {e}")  # Debug print
+        flash("Error during callback", "error")
+        return redirect(url_for('index'))
 
 @app.route('/sort', methods=['GET', 'POST'])
 def sort():

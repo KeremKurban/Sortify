@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import redis
 
 load_dotenv()
+
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
@@ -14,8 +15,8 @@ class Config:
     else:
         SPOTIFY_REDIRECT_URI = 'http://localhost:5001/callback'
 
-     # Flask-Session configuration
+    # Flask-Session configuration
     SESSION_TYPE = 'redis'
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
-    SESSION_REDIS = redis.from_url(os.environ.get('REDIS_URL', 'redis://localhost:6379'))
+    SESSION_REDIS = redis.from_url(os.environ.get('REDIS_URL'))

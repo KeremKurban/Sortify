@@ -35,13 +35,13 @@ def get_tracks_from_spotify(link, sp):
             album = sp.album(album_id)
             tracks = album['tracks']['items']
             album_cover = album['images'][0]['url']
-            return [{'id': track['id'], 'name': track['name'], 'artists': [artist['name'] for artist in track['artists']], 'preview_url': track['preview_url'], 'album_cover': album_cover} for track in tracks]
+            return [{'id': track['id'], 'name': track['name'], 'artists': [artist['name'] for artist in track['artists']], 'preview_url': track.get('preview_url'), 'album_cover': album_cover} for track in tracks]
         elif 'playlist' in link:
             playlist_id = link.split('/')[-1].split('?')[0]
             playlist = sp.playlist(playlist_id)
             tracks = playlist['tracks']['items']
             album_cover = playlist['images'][0]['url'] if playlist['images'] else None
-            return [{'id': track['track']['id'], 'name': track['track']['name'], 'artists': [artist['name'] for artist in track['track']['artists']], 'preview_url': track['track']['preview_url'], 'album_cover': album_cover} for track in tracks]
+            return [{'id': track['track']['id'], 'name': track['track']['name'], 'artists': [artist['name'] for artist in track['track']['artists']], 'preview_url': track['track'].get('preview_url'), 'album_cover': album_cover} for track in tracks]
         else:
             return []
     except spotipy.exceptions.SpotifyException as e:
