@@ -83,3 +83,23 @@ p {
     margin-top: 0;
     color: #666;
 }
+
+@media (max-width: 600px) {
+    body {
+        font-size: 16px;
+    }
+
+    h2 {
+        font-size: 18px;
+        color: #333; /* Darker color for better readability */
+    }
+
+    p {
+        font-size: 14px;
+        color: #555; /* Darker color for better readability */
+    }
+
+    .song-button {
+        padding: 15px;
+    }
+}
