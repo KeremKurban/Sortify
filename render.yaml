@@ -1,12 +1,9 @@
 services:
   - type: web
     name: sortify
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn run:app
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.2
       - key: SPOTIFY_CLIENT_ID
         sync: false
       - key: SPOTIFY_CLIENT_SECRET
@@ -15,3 +12,9 @@ services:
         sync: false
       - key: SECRET_KEY
         generateValue: true
+      - key: REDIS_URL
+        fromService:
+          name: sortify-redis
+databases:
+  - name: sortify-redis
+    plan: free
