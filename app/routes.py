@@ -40,6 +40,8 @@ def sort():
             return "Error: Unable to fetch tracks", 400
         session['tracks'] = tracks
         session['comparisons'] = {}
+        session['total_comparisons'] = (len(tracks) * (len(tracks) - 1)) // 2
+        session['completed_comparisons'] = 0
         return redirect(url_for('compare'))
 
     return render_template('sort.html')
@@ -48,22 +50,28 @@ def sort():
 def compare():
     tracks = session.get('tracks', [])
     comparisons = session.get('comparisons', {})
+    total_comparisons = session.get('total_comparisons', 1)
+    completed_comparisons = session.get('completed_comparisons', 0)
 
     if request.method == 'POST':
         song1_id = request.form.get('song1_id')
         song2_id = request.form.get('song2_id')
         chosen_id = request.form.get('chosen')
+        print(f"Received comparison: {song1_id} vs {song2_id}, chosen: {chosen_id}")  # Debug print
         comparison_key = f"{song1_id}:{song2_id}"
         comparisons[comparison_key] = chosen_id
         session['comparisons'] = comparisons
+        session['completed_comparisons'] = completed_comparisons + 1
+        print(f"Updated comparisons: {session['comparisons']}")  # Debug print
 
-    song1, song2 = get_next_comparison(tracks)
+    song1, song2 = get_next_comparison(tracks, comparisons)
     if song1 is None or song2 is None:
         sorted_tracks = merge_sort(tracks, comparisons)
         session['tracks'] = sorted_tracks
         return redirect(url_for('result'))
 
-    return render_template('compare.html', song1=song1, song2=song2)
+    progress = (completed_comparisons / total_comparisons) * 100
+    return render_template('compare.html', song1=song1, song2=song2, progress=progress)
 
 @app.route('/result')
 def result():

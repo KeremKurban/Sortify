@@ -1,3 +1,5 @@
+import random
+
 def merge_sort(songs, comparisons):
     if len(songs) <= 1:
         return songs
@@ -32,9 +34,20 @@ def merge(left, right, comparisons):
     result.extend(right[j:])
     return result
 
-def get_next_comparison(songs):
+def get_next_comparison(songs, comparisons):
     if len(songs) <= 1:
         return None, None
 
-    mid = len(songs) // 2
-    return songs[0], songs[mid]
+    remaining_comparisons = [
+        (songs[i], songs[j])
+        for i in range(len(songs))
+        for j in range(i + 1, len(songs))
+        if f"{songs[i]['id']}:{songs[j]['id']}" not in comparisons
+    ]
+
+    if not remaining_comparisons:
+        return None, None
+
+    song1, song2 = random.choice(remaining_comparisons)
+    print(f"Next comparison: {song1['id']} vs {song2['id']}")  # Debug print
+    return song1, song2
