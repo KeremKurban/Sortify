@@ -6,6 +6,9 @@ def merge_sort(songs, comparisons):
     left = merge_sort(songs[:mid], comparisons)
     right = merge_sort(songs[mid:], comparisons)
 
+    if left is None or right is None:
+        return None
+
     return merge(left, right, comparisons)
 
 def merge(left, right, comparisons):

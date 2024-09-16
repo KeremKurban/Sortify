@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, session, url_for, render_template_string
 from app import app
-from app.spotify_api import create_spotify_oauth, get_spotify_client, get_album_tracks
+from app.spotify_api import create_spotify_oauth, get_spotify_client, get_tracks_from_spotify, create_spotify_client  # Import create_spotify_client
 from app.sorting import merge_sort, get_next_comparison
 import urllib.parse
 
@@ -33,10 +33,11 @@ def callback():
 @app.route('/sort', methods=['GET', 'POST'])
 def sort():
     if request.method == 'POST':
-        album_link = request.form.get('album_link')
-        album_id = album_link.split('/')[-1].split('?')[0]
+        link = request.form.get('album_link')
         sp = create_spotify_client()  # Use the client credentials flow
-        tracks = get_album_tracks(album_id, sp)  # Pass the Spotify client
+        tracks = get_tracks_from_spotify(link, sp)  # Pass the Spotify client
+        if not tracks:
+            return "Error: Unable to fetch tracks", 400
         session['tracks'] = tracks
         session['comparisons'] = {}
         return redirect(url_for('compare'))
@@ -45,34 +46,29 @@ def sort():
 
 @app.route('/compare', methods=['GET', 'POST'])
 def compare():
-    if 'tracks' not in session:
-        return redirect(url_for('sort'))
-
-    tracks = session['tracks']
-    comparisons = session['comparisons']
+    tracks = session.get('tracks', [])
+    comparisons = session.get('comparisons', {})
 
     if request.method == 'POST':
         song1_id = request.form.get('song1_id')
         song2_id = request.form.get('song2_id')
         chosen_id = request.form.get('chosen')
-        comparisons[f"{song1_id}:{song2_id}"] = chosen_id
+        comparison_key = f"{song1_id}:{song2_id}"
+        comparisons[comparison_key] = chosen_id
         session['comparisons'] = comparisons
 
-    sorted_tracks = merge_sort(tracks, comparisons)
-    if sorted_tracks:
-        session['sorted_tracks'] = sorted_tracks
+    song1, song2 = get_next_comparison(tracks)
+    if song1 is None or song2 is None:
+        sorted_tracks = merge_sort(tracks, comparisons)
+        session['tracks'] = sorted_tracks
         return redirect(url_for('result'))
 
-    song1, song2 = get_next_comparison(tracks)
     return render_template('compare.html', song1=song1, song2=song2)
 
 @app.route('/result')
 def result():
-    if 'sorted_tracks' not in session:
-        return redirect(url_for('sort'))
-
-    sorted_tracks = session['sorted_tracks']
-    return render_template('result.html', tracks=sorted_tracks)
+    tracks = session.get('tracks', [])
+    return render_template('result.html', tracks=tracks)
 
 @app.route('/test_static')
 def test_static():
