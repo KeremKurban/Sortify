@@ -42,6 +42,7 @@ def sort():
         session['comparisons'] = {}
         session['total_comparisons'] = (len(tracks) * (len(tracks) - 1)) // 2
         session['completed_comparisons'] = 0
+        print(f"Tracks: {tracks}")  # Debug print
         return redirect(url_for('compare'))
 
     return render_template('sort.html')
@@ -71,7 +72,7 @@ def compare():
         return redirect(url_for('result'))
 
     progress = (completed_comparisons / total_comparisons) * 100
-    album_cover = tracks[0]['album_cover'] if tracks else None
+    album_cover = tracks[0].get('album_cover') if tracks else None
     return render_template('compare.html', song1=song1, song2=song2, progress=progress, album_cover=album_cover)
 
 @app.route('/result')
