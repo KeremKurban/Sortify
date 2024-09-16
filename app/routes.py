@@ -33,6 +33,12 @@ def callback():
 @app.route('/sort', methods=['GET', 'POST'])
 def sort():
     if request.method == 'POST':
+        # Clear session data
+        session.pop('tracks', None)
+        session.pop('comparisons', None)
+        session.pop('total_comparisons', None)
+        session.pop('completed_comparisons', None)
+
         link = request.form.get('album_link')
         sp = create_spotify_client()  # Use the client credentials flow
         tracks = get_tracks_from_spotify(link, sp)  # Pass the Spotify client
@@ -53,6 +59,9 @@ def compare():
     comparisons = session.get('comparisons', {})
     total_comparisons = session.get('total_comparisons', 1)
     completed_comparisons = session.get('completed_comparisons', 0)
+
+    if not tracks:
+        return redirect(url_for('sort'))
 
     if request.method == 'POST':
         song1_id = request.form.get('song1_id')

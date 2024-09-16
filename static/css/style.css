@@ -37,6 +37,21 @@ input[type="text"] {
     display: block;
 }
 
+.progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #1DB954;
+    width: 0;
+    transition: width 0.4s ease;
+}
+
 .song-button {
     display: block;
     width: 100%;
