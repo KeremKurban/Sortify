@@ -1,5 +1,5 @@
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from flask import current_app, session, url_for
 
 def create_spotify_oauth():
@@ -9,6 +9,13 @@ def create_spotify_oauth():
         redirect_uri=current_app.config['SPOTIFY_REDIRECT_URI'],
         scope='playlist-read-private'
     )
+
+def create_spotify_client():
+    client_credentials_manager = SpotifyClientCredentials(
+        client_id=current_app.config['SPOTIFY_CLIENT_ID'],
+        client_secret=current_app.config['SPOTIFY_CLIENT_SECRET']
+    )
+    return spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 def get_spotify_client():
     token_info = session.get('token_info', None)

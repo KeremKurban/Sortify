@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, session, url_for
+from flask import render_template, redirect, request, session, url_for, render_template_string
 from app import app
 from app.spotify_api import create_spotify_oauth, get_spotify_client, get_album_tracks
 from app.sorting import merge_sort, get_next_comparison
@@ -6,6 +6,7 @@ import urllib.parse
 
 @app.route('/')
 def index():
+    print("Rendering index.html")  # Debug print
     return render_template('index.html')
 
 @app.route('/login')
@@ -19,19 +20,23 @@ def callback():
     sp_oauth = create_spotify_oauth()
     session.clear()
     code = request.args.get('code')
+    print(f"Received code: {code}")  # Debug print
+    if not code:
+        return "Error: No code provided", 400
     token_info = sp_oauth.get_access_token(code)
+    print(f"Token info: {token_info}")  # Debug print
+    if not token_info:
+        return "Error: Unable to retrieve token", 400
     session["token_info"] = token_info
-    return redirect(url_for('index'))
+    return redirect(url_for('sort'))  # Redirect to sort page
 
 @app.route('/sort', methods=['GET', 'POST'])
 def sort():
-    if 'token_info' not in session:
-        return redirect(url_for('login'))
-
     if request.method == 'POST':
         album_link = request.form.get('album_link')
         album_id = album_link.split('/')[-1].split('?')[0]
-        tracks = get_album_tracks(album_id)
+        sp = create_spotify_client()  # Use the client credentials flow
+        tracks = get_album_tracks(album_id, sp)  # Pass the Spotify client
         session['tracks'] = tracks
         session['comparisons'] = {}
         return redirect(url_for('compare'))
@@ -68,3 +73,25 @@ def result():
 
     sorted_tracks = session['sorted_tracks']
     return render_template('result.html', tracks=sorted_tracks)
+
+@app.route('/test_static')
+def test_static():
+    return render_template_string('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Test Static</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <h1>Static File Test</h1>
+        <p>If the CSS is loaded correctly, this text should be styled.</p>
+    </body>
+    </html>
+    ''')
+
+def get_album_tracks(album_id, sp):
+    tracks = sp.album_tracks(album_id)
+    return [{'id': track['id'], 'name': track['name'], 'artists': [artist['name'] for artist in track['artists']]} for track in tracks['items']]

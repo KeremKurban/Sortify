@@ -12,4 +12,4 @@ class Config:
     if os.environ.get('RENDER_EXTERNAL_URL'):
         SPOTIFY_REDIRECT_URI = f"{os.environ.get('RENDER_EXTERNAL_URL')}/callback"
     else:
-        SPOTIFY_REDIRECT_URI = 'http://localhost:5000/callback'
+        SPOTIFY_REDIRECT_URI = 'http://localhost:5001/callback'
