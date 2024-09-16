@@ -71,7 +71,8 @@ def compare():
         return redirect(url_for('result'))
 
     progress = (completed_comparisons / total_comparisons) * 100
-    return render_template('compare.html', song1=song1, song2=song2, progress=progress)
+    album_cover = tracks[0]['album_cover'] if tracks else None
+    return render_template('compare.html', song1=song1, song2=song2, progress=progress, album_cover=album_cover)
 
 @app.route('/result')
 def result():

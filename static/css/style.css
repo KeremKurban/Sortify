@@ -30,6 +30,13 @@ input[type="text"] {
     margin-bottom: 10px;
 }
 
+.album-cover {
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto;
+    display: block;
+}
+
 .song-button {
     display: block;
     width: 100%;
