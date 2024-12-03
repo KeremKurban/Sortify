@@ -1,6 +1,8 @@
 # Sortify
 
-<img src="https://raw.githubusercontent.com/KeremKurban/Sortify/dev/images/ui_example.png" alt="UI Example" width="400"/>
+<div style="text-align: center;">
+  <img src="https://raw.githubusercontent.com/KeremKurban/Sortify/dev/images/ui_example.png" alt="UI Example" width="400"/>
+</div>
 
 Sortify is a web application that allows users to sort their favorite Spotify album tracks based on their preferences. Users can input an album link, compare two songs at a time, and choose their preference until all songs are sorted. The application also displays album covers and provides play buttons for each song during the comparison phase.
 
