@@ -10,7 +10,9 @@ class Config:
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
     
     # Dynamically set the redirect URI based on the environment
-    if os.environ.get('RENDER_EXTERNAL_URL'):
+    if os.environ.get('RENDER_EXTERNAL_URL') and os.environ.get('ENV') == 'prod':
+        SPOTIFY_REDIRECT_URI = f"{os.environ.get('RENDER_EXTERNAL_URL')}/callback"
+    elif os.environ.get('RENDER_EXTERNAL_URL') and os.environ.get('ENV') == 'dev':
         SPOTIFY_REDIRECT_URI = f"{os.environ.get('RENDER_EXTERNAL_URL')}/callback"
     else:
         SPOTIFY_REDIRECT_URI = 'http://localhost:5001/callback'
