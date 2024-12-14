@@ -18,3 +18,6 @@
 - Display album covers during comparisons
 - Updated README with installation and deployment instructions
 - Added readme and changelog
+
+### Fixed
+- Adjusted color schema for smart phones and tablets
